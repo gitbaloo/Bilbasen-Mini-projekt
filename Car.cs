@@ -23,6 +23,22 @@ namespace Bilbasen_Mini_projekt
             this.price = price;
         }
 
+        public int ShowID()
+        {
+            return id;
+        }
+
+        public int AlterID()
+        {
+            id--;
+            return id;
+        }
+        
+        public string CarToString()
+        {
+            return id + "," + type + "," + numberplate + "," + year + "," + price;
+        }
+
         public void MenuInfo()
         {
             Console.WriteLine(id + ")       " + type);
@@ -35,5 +51,7 @@ namespace Bilbasen_Mini_projekt
             Console.WriteLine("Produced in: " + year);
             Console.WriteLine("Price: " + price + " kr.");
         }
+
+        
     }
 }

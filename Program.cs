@@ -16,7 +16,7 @@ namespace Bilbasen_Mini_projekt
             bool exit = false;
 
             //Here we enter the user interface
-            while (exit == false)
+            while (!exit)
             {
                 //loading the text file
                 var txt = @"C:\Users\nikol\Documents\Datamatiker\Programmering\cars.txt";
@@ -36,15 +36,15 @@ namespace Bilbasen_Mini_projekt
                 double price;
 
                 //Creating a string array that separates of all lines into smaller strings with the divider being a comma (,)
-                foreach (string line1 in lines)
+                foreach (string line in lines)
                 {
-                    string[] data1 = line1.Split(',');
+                    string[] data = line.Split(',');
 
-                    id = int.Parse(data1[0]);
-                    model = data1[1];
-                    numberplate = data1[2];
-                    year = int.Parse(data1[3]);
-                    price = double.Parse(data1[4]);
+                    id = int.Parse(data[0]);
+                    model = data[1];
+                    numberplate = data[2];
+                    year = int.Parse(data[3]);
+                    price = double.Parse(data[4]);
 
 
                     //Here we add a new car using a constructor and add it to our list of cars
@@ -79,10 +79,23 @@ namespace Bilbasen_Mini_projekt
 
                 bool returnToMain = false;
 
-                while (returnToMain == false)
+                while (!returnToMain)
                 {
-                    int choice1 = int.Parse(Console.ReadLine());
-                    
+                    //tryparse
+                    int choice1 = 0;
+                    bool choice1Continue = false;
+                    while (!choice1Continue)
+                    {
+                        bool choice1Success = int.TryParse(Console.ReadLine(), out choice1);
+                        if (!choice1Success)
+                        {
+                            Console.WriteLine("Invalid input. Please try again");
+                        }
+                        else
+                        {
+                            choice1Continue = true;
+                        }
+                    }
 
                     switch (choice1)
                     {
@@ -90,7 +103,20 @@ namespace Bilbasen_Mini_projekt
 
                             Console.WriteLine("Choose a car to see more details by entering the number assigned to it");
                             Console.WriteLine("Press '0' to return to main menu");
-                            int choice2 = int.Parse(Console.ReadLine());
+                            int choice2 = 0;
+                            bool choice2Continue = false;
+                            while (!choice2Continue)
+                            {
+                                bool choice2Success = int.TryParse(Console.ReadLine(), out choice2);
+                                if (!choice2Success)
+                                {
+                                    Console.WriteLine("Invalid input. Please try again");
+                                }
+                                else
+                                {
+                                    choice2Continue = true;
+                                }
+                            }
 
                             //User chooses car to view details on
 
@@ -130,9 +156,9 @@ namespace Bilbasen_Mini_projekt
                             while (!yearContinue)
                             {
                                 Console.WriteLine("Enter year of production:");
-                                
+
                                 bool successYear = int.TryParse(Console.ReadLine(), out yearEntry);
-                                if (successYear == false)
+                                if (!successYear)
                                 {
                                     Console.WriteLine("Invalid input. Please try again");
                                 }
@@ -146,9 +172,9 @@ namespace Bilbasen_Mini_projekt
                             while (!priceContinue)
                             {
                                 Console.WriteLine("Enter price: ");
-                                
+
                                 bool successPrice = double.TryParse(Console.ReadLine(), out priceEntry);
-                                if (successPrice == false)
+                                if (!successPrice)
                                 {
                                     Console.WriteLine("Invalid input. Please try again");
                                 }
@@ -174,40 +200,42 @@ namespace Bilbasen_Mini_projekt
                             Console.WriteLine("Press '0' to return to main menu");
 
                             //User chooses car to delete
-                            try
+
+                            int choice3 = 0;
+                            bool choice3Continue = false;
+                            while (!choice3Continue)
                             {
-                                int choice3 = int.Parse(Console.ReadLine());
-
-                                carlist.RemoveAt(choice3 - 1);
-                                lines.RemoveAt(choice3 - 1);
-
-                                foreach (string line2 in lines)
+                                bool choice3Success = int.TryParse(Console.ReadLine(), out choice3);
+                                if (!choice3Success)
                                 {
-                                    string[] data2 = line2.Split(',');
-
-                                    id = int.Parse(data2[0]);
-                                    model = data2[1];
-                                    numberplate = data2[2];
-                                    year = int.Parse(data2[3]);
-                                    price = double.Parse(data2[4]);
-
-                                    if (id > choice3)
-                                    {
-                                        line2.Replace(Convert.ToChar(data2[0]), Convert.ToChar(id - 1));
-                                    }
+                                    Console.WriteLine("Invalid input. Please try again");
                                 }
-                                File.WriteAllLines(txt, lines);
-                                Console.WriteLine();
-                                Console.WriteLine("Press any key to return to main menu");
-                                Console.ReadKey();
-                                Console.Clear();
+                                else
+                                {
+                                    choice3Continue = true;
+                                }
+                            }
 
-                                returnToMain = true;
-                            }
-                            catch(Exception ex)
+                            carlist.RemoveAt(choice3 - 1);
+                            lines.Clear();
+                                                        
+                            foreach (Car car in carlist)
                             {
-                                Console.WriteLine(ex.Message + " Please enter a valid number...");
+                                if (car.ShowID() > choice3)
+                                {
+                                    id = car.AlterID();
+                                }
+                                lines.Add(car.CarToString());
                             }
+                            
+                            File.WriteAllLines(txt, lines);
+                            Console.WriteLine();
+                            Console.WriteLine("Press any key to return to main menu");
+                            Console.ReadKey();
+                            Console.Clear();
+
+                            returnToMain = true;
+
                             break;
 
                         case 0:
